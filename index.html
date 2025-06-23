@@ -2,41 +2,51 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Terminal - Lucid POC-2</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lucid Terminal</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            padding: 30px;
-            background-color: #f5f5f5;
-            text-align: center;
+            font-family: sans-serif;
+            background: #0f172a;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
         }
 
         h1 {
-            color: #333;
+            margin-bottom: 20px;
+            color: #00ffe5;
         }
 
-        #weightBox {
-            margin-top: 20px;
+        input {
             padding: 10px;
-            font-size: 24px;
-            width: 200px;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            border: none;
+            outline: none;
+            width: 250px;
             text-align: center;
-            border: 2px solid #333;
-            border-radius: 5px;
-            background-color: #fff;
+            color: #0f172a;
         }
     </style>
 </head>
 
 <body>
-    <h1>Weight (from Bluetooth)</h1>
-    <input id="weightBox" type="text" readonly placeholder="Waiting for data..." />
+    <h1>Bluetooth Weight</h1>
+    <input id="weightInput" type="text" placeholder="Waiting for weight..." readonly />
 
     <script>
-        function updateWeight(value) {
-            document.getElementById("weightBox").value = value;
-        }
+        // Listen for weight from React Native via postMessage
+        window.addEventListener('message', function (event) {
+            const weight = event.data;
+            console.log('Received weight:', weight);
+            document.getElementById('weightInput').value = weight;
+        });
     </script>
 </body>
 
