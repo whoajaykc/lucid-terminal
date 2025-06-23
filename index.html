@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Terminal - Lucid POC-2</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+            background-color: #f5f5f5;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        #weightBox {
+            margin-top: 20px;
+            padding: 10px;
+            font-size: 24px;
+            width: 200px;
+            text-align: center;
+            border: 2px solid #333;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Weight (from Bluetooth)</h1>
+    <input id="weightBox" type="text" readonly placeholder="Waiting for data..." />
+
+    <script>
+        function updateWeight(value) {
+            document.getElementById("weightBox").value = value;
+        }
+    </script>
+</body>
+
+</html>
