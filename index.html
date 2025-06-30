@@ -53,53 +53,88 @@
 
 </html> -->
 
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lucid Terminal</title>
     <style>
         body {
-            background-color: #0f172a;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(145deg, #0f172a, #1e293b);
             color: white;
-            font-family: sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            color: #00ffe5;
+            text-shadow: 0 0 10px #00ffe5;
+            font-size: 2rem;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            width: 270px;
+        }
+
+        label {
+            font-size: 1rem;
+            margin-bottom: 5px;
+            color: #94a3b8;
         }
 
         input {
             padding: 10px;
-            font-size: 18px;
-            margin: 10px;
-            width: 250px;
-            text-align: center;
+            font-size: 1.1rem;
             border-radius: 8px;
             border: none;
+            outline: none;
+            width: 100%;
+            text-align: center;
+            color: #0f172a;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        input[readonly] {
+            background-color: #f1f5f9;
+            font-weight: bold;
         }
     </style>
 </head>
 
 <body>
-    <h1>Bluetooth Terminal</h1>
+    <h1>Lucid Terminal</h1>
 
-    <label>Weight:</label>
-    <input id="weightBox" type="text" placeholder="Waiting for weight..." readonly />
+    <div class="field">
+        <label for="weightInput">Weight</label>
+        <input id="weightInput" type="text" placeholder="Waiting for weight..." readonly />
+    </div>
 
-    <label>Device Name:</label>
-    <input id="deviceName" type="text" placeholder="Enter device name..." />
+    <div class="field">
+        <label for="deviceName">Device Name</label>
+        <input id="deviceName" type="text" placeholder="Enter device name..." />
+    </div>
 
     <script>
-        window.addEventListener('message', function (event) {
+        document.addEventListener('message', function (event) {
             const weight = event.data;
-            console.log('Received weight:', weight);
-            document.getElementById('weightBox').value = weight;
+            console.log('📥 Received weight:', weight);
+            const input = document.getElementById('weightInput');
+            if (input) input.value = weight;
         });
     </script>
+
 </body>
 
 </html>
