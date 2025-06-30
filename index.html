@@ -41,16 +41,14 @@
     <input id="weightInput" type="text" placeholder="Waiting for weight..." readonly />
 
     <script>
-        // Receive weight from React Native WebView via postMessage
-        window.addEventListener('message', function (event) {
+        document.addEventListener('message', function (event) {
             const weight = event.data;
             console.log('📥 Received weight:', weight);
             const input = document.getElementById('weightInput');
-            if (input) {
-                input.value = weight;
-            }
+            if (input) input.value = weight;
         });
     </script>
+
 </body>
 
 </html>
