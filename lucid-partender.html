@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lucid Partender Mode</title>
+    <style>
+        body {
+            margin: 0;
+            background: #0f172a;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: #e0e7ff;
+            font-family: sans-serif;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #00ffe5;
+            text-shadow: 0 0 10px #00ffe5;
+        }
+
+        .bottle {
+            position: relative;
+            width: 120px;
+            height: 280px;
+            background: #1e3a8a;
+            border: 3px solid #38bdf8;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 0 20px #2563eb;
+            cursor: pointer;
+        }
+
+        .liquid {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 0%;
+            background: linear-gradient(to top, #0ea5e9, #38bdf8);
+            transition: height 0.5s ease;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+        }
+
+        .label {
+            margin-top: 12px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #facc15;
+            text-shadow: 0 0 5px #facc15;
+        }
+
+        footer {
+            position: absolute;
+            bottom: 16px;
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Partender Mode</h1>
+    <div class="bottle" id="bottle">
+        <div class="liquid" id="liquid"></div>
+    </div>
+    <div class="label" id="label">0 ml</div>
+    <footer>Tap inside bottle to set volume</footer>
+
+    <script>
+        const bottle = document.getElementById('bottle');
+        const liquid = document.getElementById('liquid');
+        const label = document.getElementById('label');
+        const maxML = 750; // adjust to bottle capacity
+
+        bottle.addEventListener('click', event => {
+            const rect = bottle.getBoundingClientRect();
+            const clickY = event.clientY - rect.top;
+            const pct = 1 - (clickY / rect.height);
+            const ml = Math.round(pct * maxML);
+            const heightPct = Math.round(pct * 100);
+
+            liquid.style.height = heightPct + '%';
+            label.innerText = ml + ' ml';
+
+            // send message back to your React Native App
+            window.ReactNativeWebView?.postMessage(`Partender: ${ml} ml`);
+        });
+    </script>
+</body>
+
+</html>
