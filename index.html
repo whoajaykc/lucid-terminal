@@ -33,60 +33,6 @@
             text-align: center;
             color: #0f172a;
         }
-    </style>
-</head>
-
-<body>
-    <h1>Bluetooth Weight</h1>
-    <input id="weightInput" type="text" placeholder="Waiting for weight..." readonly />
-
-    <script>
-        document.addEventListener('message', function (event) {
-            const weight = event.data;
-            console.log('📥 Received weight:', weight);
-            const input = document.getElementById('weightInput');
-            if (input) input.value = weight;
-        });
-    </script>
-
-</body>
-
-</html> -->
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lucid Terminal</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            background: #0f172a;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        h1 {
-            margin-bottom: 20px;
-            color: #00ffe5;
-        }
-
-        input {
-            padding: 10px;
-            font-size: 1.2rem;
-            border-radius: 8px;
-            border: none;
-            outline: none;
-            width: 250px;
-            text-align: center;
-            color: #0f172a;
-        }
 
         .filledValue {
             margin-top: 20px;
@@ -119,6 +65,155 @@
                 // Default Bluetooth weight display
                 weightInput.value = data;
                 filledContainer.style.display = 'none'; // hide filled card until filled is sent
+            }
+
+            console.log('📥 WebView Received:', data);
+        });
+    </script>
+</body>
+
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lucid Terminal</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: radial-gradient(circle at center, #0f172a 0%, #030712 100%);
+            margin: 0;
+            padding: 0;
+            color: #e0f2fe;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #38bdf8;
+            text-shadow: 0 0 10px #38bdf8, 0 0 30px #0ea5e9;
+            margin-bottom: 20px;
+        }
+
+        #weightInput {
+            font-size: 1.6rem;
+            padding: 14px 20px;
+            width: 280px;
+            text-align: center;
+            border: none;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(6px);
+            color: #f8fafc;
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.6);
+            outline: none;
+            transition: all 0.3s ease-in-out;
+        }
+
+        #weightInput::placeholder {
+            color: #94a3b8;
+        }
+
+        .bottle-container {
+            position: relative;
+            width: 100px;
+            height: 200px;
+            border: 4px solid #38bdf8;
+            border-radius: 20px;
+            margin-top: 30px;
+            overflow: hidden;
+            background: rgba(59, 130, 246, 0.1);
+            box-shadow: 0 0 10px #0ea5e9;
+        }
+
+        .liquid {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: linear-gradient(to top, #0ea5e9, #38bdf8);
+            transition: height 0.5s ease-in-out;
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.85;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        #filledContainer {
+            margin-top: 24px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #facc15;
+            padding: 12px 20px;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 12px #facc15;
+            display: none;
+            text-align: center;
+        }
+
+        footer {
+            position: absolute;
+            bottom: 20px;
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Lucid Terminal</h1>
+    <input id="weightInput" type="text" placeholder="Waiting for weight..." readonly />
+
+    <div class="bottle-container">
+        <div class="liquid" id="liquidFill" style="height: 0%;"></div>
+    </div>
+
+    <div id="filledContainer"></div>
+
+    <footer>© Lucid Labs • BLE Live Feed</footer>
+
+    <script>
+        document.addEventListener('message', function (event) {
+            const data = event.data;
+            const weightInput = document.getElementById('weightInput');
+            const filledContainer = document.getElementById('filledContainer');
+            const liquid = document.getElementById('liquidFill');
+
+            if (data.includes('Filled:')) {
+                const match = data.match(/Filled:\s*(\d+)/);
+                const percent = match ? Math.min(parseInt(match[1]), 100) : 0;
+                liquid.style.height = percent + '%';
+
+                filledContainer.innerText = data;
+                filledContainer.style.display = 'block';
+            } else {
+                weightInput.value = data;
+                filledContainer.style.display = 'none';
+                liquid.style.height = '0%';
             }
 
             console.log('📥 WebView Received:', data);
