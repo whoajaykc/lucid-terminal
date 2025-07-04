@@ -52,7 +52,6 @@
 </body>
 
 </html> -->
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -96,14 +95,19 @@
     <input id="weightInput" type="text" placeholder="Waiting for data..." readonly />
 
     <script>
-        document.addEventListener('message', function (event) {
-            const data = event.data;
-            console.log('📥 Received:', data);
+        function updateWeight(data) {
             const input = document.getElementById('weightInput');
             if (input) input.value = data;
+        }
+
+        document.addEventListener('message', function (event) {
+            updateWeight(event.data);
+        });
+
+        window.addEventListener('message', function (event) {
+            updateWeight(event.data);
         });
     </script>
-
 </body>
 
 </html>
