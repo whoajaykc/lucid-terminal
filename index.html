@@ -33,22 +33,43 @@
             text-align: center;
             color: #0f172a;
         }
+
+        .filledValue {
+            margin-top: 20px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #facc15;
+            background-color: #1e3a8a;
+            padding: 12px 20px;
+            border-radius: 10px;
+        }
     </style>
 </head>
 
 <body>
     <h1>Bluetooth Weight</h1>
     <input id="weightInput" type="text" placeholder="Waiting for weight..." readonly />
+    <div id="filledContainer" class="filledValue" style="display: none;"></div>
 
     <script>
         document.addEventListener('message', function (event) {
-            const weight = event.data;
-            console.log('📥 Received weight:', weight);
-            const input = document.getElementById('weightInput');
-            if (input) input.value = weight;
+            const data = event.data;
+            const weightInput = document.getElementById('weightInput');
+            const filledContainer = document.getElementById('filledContainer');
+
+            // If data contains 'Filled: ', it's the ml filled value
+            if (data.includes('Filled:')) {
+                filledContainer.innerText = data;
+                filledContainer.style.display = 'block';
+            } else {
+                // Default Bluetooth weight display
+                weightInput.value = data;
+                filledContainer.style.display = 'none'; // hide filled card until filled is sent
+            }
+
+            console.log('📥 WebView Received:', data);
         });
     </script>
-
 </body>
 
 </html>
