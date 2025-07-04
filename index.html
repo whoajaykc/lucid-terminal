@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -65,6 +65,113 @@
                 // Default Bluetooth weight display
                 weightInput.value = data;
                 filledContainer.style.display = 'none'; // hide filled card until filled is sent
+            }
+
+            console.log('📥 WebView Received:', data);
+        });
+    </script>
+</body>
+
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lucid Terminal</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background: #0f172a;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #00ffe5;
+        }
+
+        input {
+            padding: 10px;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            border: none;
+            outline: none;
+            width: 250px;
+            text-align: center;
+            color: #0f172a;
+        }
+
+        .filledWrapper {
+            margin-top: 20px;
+            width: 250px;
+            height: 40px;
+            border-radius: 10px;
+            background-color: #1e3a8a;
+            overflow: hidden;
+            box-shadow: 0 0 10px #38bdf8;
+            position: relative;
+        }
+
+        .filledBar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, #38bdf8, #0ea5e9);
+            transition: width 0.6s ease-in-out;
+        }
+
+        .filledText {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #facc15;
+            text-shadow: 0 0 4px #facc15;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Bluetooth Weight</h1>
+    <input id="weightInput" type="text" placeholder="Waiting for weight..." readonly />
+
+    <div id="filledContainer" class="filledWrapper" style="display: none;">
+        <div class="filledBar" id="fillBar"></div>
+        <div class="filledText" id="fillText">0 ml</div>
+    </div>
+
+    <script>
+        document.addEventListener('message', function (event) {
+            const data = event.data;
+            const weightInput = document.getElementById('weightInput');
+            const filledContainer = document.getElementById('filledContainer');
+            const fillBar = document.getElementById('fillBar');
+            const fillText = document.getElementById('fillText');
+
+            if (data.includes('Filled:')) {
+                const match = data.match(/Filled:\s*(\d+)/);
+                const value = match ? parseInt(match[1]) : 0;
+                const widthPercent = Math.min((value / 500) * 100, 100); // assuming 500ml max
+
+                fillBar.style.width = widthPercent + '%';
+                fillText.innerText = `${value} ml`;
+                filledContainer.style.display = 'block';
+            } else {
+                weightInput.value = data;
+                filledContainer.style.display = 'none';
+                fillBar.style.width = '0%';
             }
 
             console.log('📥 WebView Received:', data);
