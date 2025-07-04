@@ -1,79 +1,3 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lucid Terminal</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            background: #0f172a;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        h1 {
-            margin-bottom: 20px;
-            color: #00ffe5;
-        }
-
-        input {
-            padding: 10px;
-            font-size: 1.2rem;
-            border-radius: 8px;
-            border: none;
-            outline: none;
-            width: 250px;
-            text-align: center;
-            color: #0f172a;
-        }
-
-        .filledValue {
-            margin-top: 20px;
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #facc15;
-            background-color: #1e3a8a;
-            padding: 12px 20px;
-            border-radius: 10px;
-        }
-    </style>
-</head>
-
-<body>
-    <h1>Bluetooth Weight</h1>
-    <input id="weightInput" type="text" placeholder="Waiting for weight..." readonly />
-    <div id="filledContainer" class="filledValue" style="display: none;"></div>
-
-    <script>
-        document.addEventListener('message', function (event) {
-            const data = event.data;
-            const weightInput = document.getElementById('weightInput');
-            const filledContainer = document.getElementById('filledContainer');
-
-            // If data contains 'Filled: ', it's the ml filled value
-            if (data.includes('Filled:')) {
-                filledContainer.innerText = data;
-                filledContainer.style.display = 'block';
-            } else {
-                // Default Bluetooth weight display
-                weightInput.value = data;
-                filledContainer.style.display = 'none'; // hide filled card until filled is sent
-            }
-
-            console.log('📥 WebView Received:', data);
-        });
-    </script>
-</body>
-
-</html> -->
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -110,35 +34,41 @@
             color: #0f172a;
         }
 
-        .filledWrapper {
+        .filledValue {
+            position: relative;
             margin-top: 20px;
             width: 250px;
             height: 40px;
             border-radius: 10px;
             background-color: #1e3a8a;
             overflow: hidden;
-            box-shadow: 0 0 10px #38bdf8;
-            position: relative;
+            box-shadow: 0 0 10px #3b82f6;
+            display: none;
         }
 
-        .filledBar {
+        .fillBar {
+            position: absolute;
             height: 100%;
-            width: 0%;
+            left: 0;
+            top: 0;
             background: linear-gradient(to right, #38bdf8, #0ea5e9);
-            transition: width 0.6s ease-in-out;
+            width: 0%;
+            transition: width 0.5s ease;
         }
 
-        .filledText {
+        .fillText {
             position: absolute;
             width: 100%;
-            text-align: center;
-            top: 50%;
+            height: 100%;
+            top: 0;
             left: 0;
-            transform: translateY(-50%);
-            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
             font-weight: bold;
             color: #facc15;
-            text-shadow: 0 0 4px #facc15;
+            text-shadow: 0 0 5px #facc15;
         }
     </style>
 </head>
@@ -147,9 +77,9 @@
     <h1>Bluetooth Weight</h1>
     <input id="weightInput" type="text" placeholder="Waiting for weight..." readonly />
 
-    <div id="filledContainer" class="filledWrapper" style="display: none;">
-        <div class="filledBar" id="fillBar"></div>
-        <div class="filledText" id="fillText">0 ml</div>
+    <div id="filledContainer" class="filledValue">
+        <div class="fillBar" id="fillBar"></div>
+        <div class="fillText" id="fillText">0 ml</div>
     </div>
 
     <script>
@@ -162,11 +92,13 @@
 
             if (data.includes('Filled:')) {
                 const match = data.match(/Filled:\s*(\d+)/);
-                const value = match ? parseInt(match[1]) : 0;
-                const widthPercent = Math.min((value / 500) * 100, 100); // assuming 500ml max
+                const ml = match ? parseInt(match[1]) : 0;
 
-                fillBar.style.width = widthPercent + '%';
-                fillText.innerText = `${value} ml`;
+                const maxML = 500; // adjust this based on your bottle max
+                const percentage = Math.min((ml / maxML) * 100, 100);
+
+                fillBar.style.width = percentage + '%';
+                fillText.innerText = `${ml} ml`;
                 filledContainer.style.display = 'block';
             } else {
                 weightInput.value = data;
